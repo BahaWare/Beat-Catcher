@@ -823,6 +823,16 @@ document.getElementById('reset-settings-button').addEventListener('click', () =>
         // Update ship
         this.ship.update(this.keys, this.width);
         
+        // Update multiplayer position
+        if (this.isMultiplayer && this.multiplayerManager && this.multiplayerManager.roomRef) {
+            this.multiplayerManager.updatePlayerState({
+                position: { x: this.ship.x, y: this.ship.y },
+                score: this.score,
+                catches: this.catches,
+                streak: this.catchStreak
+            });
+        }
+        
         // Update mobile controls visibility
         if (this.mobileControls) {
         this.mobileControls.update();

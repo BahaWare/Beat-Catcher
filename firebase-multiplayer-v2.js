@@ -241,7 +241,16 @@ class FirebaseMultiplayer {
             // Update other players
             Object.keys(players).forEach(playerId => {
                 if (playerId !== this.playerId) {
-                    this.otherPlayers[playerId] = players[playerId];
+                    const player = players[playerId];
+                    this.otherPlayers[playerId] = {
+                        name: player.name,
+                        x: player.position ? player.position.x : 400,
+                        y: player.position ? player.position.y : 500,
+                        score: player.score || 0,
+                        catches: player.catches || 0,
+                        streak: player.streak || 0,
+                        ready: player.ready || false
+                    };
                 }
             });
             
