@@ -2,7 +2,7 @@
 
 A rhythm-based catching game where you control a ship dodging obstacles to the beat of music. Features bright rainbow colors, visual effects, and dynamic gameplay optimized to increase dopamine!
 
-[Click To Play](https://bahaware.github.io/Beat-Catcher/)
+[🟩 Click To Play](https://bahaware.github.io/Beat-Catcher/)
 
 ![Game Preview](https://img.shields.io/badge/status-active-success.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
