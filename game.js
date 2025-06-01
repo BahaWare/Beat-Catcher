@@ -510,6 +510,9 @@ class Game {
         
         // Set up event listeners
         this.setupEventListeners();
+
+        // Initialize mobile controls
+        this.mobileControls = new MobileControls(this);
         
         // Update skin preview
         this.skinManager.updatePreview();
@@ -801,6 +804,11 @@ document.getElementById('reset-settings-button').addEventListener('click', () =>
         // Update ship
         this.ship.update(this.keys, this.width);
         
+        // Update mobile controls visibility
+        if (this.mobileControls) {
+        this.mobileControls.update();
+        }
+
         // Only spawn objects if not in game ending state
         if (this.gameState === 'playing') {
             // Spawn objects based on level
