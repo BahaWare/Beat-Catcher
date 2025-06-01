@@ -1,0 +1,449 @@
+/* Enhanced Multiplayer Styles */
+
+/* Player name section */
+.player-name-section {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.name-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 5px;
+    width: 200px;
+}
+
+.name-input:focus {
+    outline: none;
+    border-color: #00ffff;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+/* Main multiplayer layout */
+.multiplayer-content {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 30px auto;
+    max-width: 1400px;
+    padding: 0 20px;
+}
+
+.multiplayer-options {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Room sections side by side */
+.create-room-section,
+.join-room-section {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Active rooms on the right */
+.active-rooms-section {
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 20px;
+    width: 350px;
+    max-height: 500px;
+    overflow-y: auto;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+.active-rooms-section h3 {
+    color: #00ffff;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.active-rooms-list {
+    margin-top: 15px;
+}
+
+.active-room-item {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+.active-room-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(5px);
+}
+
+.room-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.room-host {
+    font-weight: bold;
+    color: #00ffff;
+}
+
+.room-players {
+    font-size: 14px;
+    color: #aaa;
+}
+
+.join-btn {
+    background: rgba(0, 255, 0, 0.3);
+    border: 1px solid #00ff00;
+    color: #00ff00;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.join-btn:hover {
+    background: rgba(0, 255, 0, 0.5);
+    transform: scale(1.05);
+}
+
+.no-rooms {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 20px;
+}
+
+/* Room code display */
+.room-code {
+    font-size: 48px;
+    letter-spacing: 8px;
+    color: #00ffff;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+    margin: 20px 0;
+}
+
+.room-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    padding: 15px;
+    font-size: 24px;
+    text-align: center;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    width: 300px;
+}
+
+.room-input:focus {
+    outline: none;
+    border-color: #00ffff;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+/* Room lobby - horizontal layout */
+#room-lobby {
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 30px;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+#room-lobby h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #00ffff;
+}
+
+.lobby-layout {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.players-list {
+    flex: 1;
+    max-height: 300px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.player-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin: 5px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+.player-item.current-player {
+    border: 2px solid #00ffff;
+    background: rgba(0, 255, 255, 0.1);
+}
+
+.ready-badge {
+    background: #00ff00;
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.not-ready-badge {
+    background: #ff0000;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.lobby-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 200px;
+}
+
+.neon-button.small {
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+/* Main menu active servers */
+#main-menu-rooms-list {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 20px;
+    min-width: 200px;
+    max-width: 250px;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+#main-menu-rooms-list h3 {
+    color: #00ffff;
+    margin-bottom: 10px;
+    font-size: 18px;
+    text-align: center;
+}
+
+.room-count {
+    color: #aaa;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Made by position - fixed to bottom left with proper spacing */
+.made-by {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    font-size: 14px;
+    color: #aaa;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px 15px;
+    border-radius: 5px;
+    z-index: 100;
+}
+
+.made-by a {
+    color: #00ffff;
+    text-decoration: none;
+}
+
+.made-by a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .multiplayer-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .active-rooms-section {
+        width: 100%;
+        max-width: 500px;
+        position: static;
+        margin-top: 20px;
+    }
+    
+    #main-menu-rooms-list {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        transform: none;
+        min-width: 150px;
+    }
+}
+
+@media (max-width: 768px) {
+    .multiplayer-options {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .create-room-section,
+    .join-room-section {
+        width: 100%;
+        max-width: 400px;
+    }
+    
+    .room-input {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    #room-lobby {
+        padding: 20px;
+    }
+    
+    .lobby-layout {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .lobby-controls {
+        width: 100%;
+    }
+    
+    .made-by {
+        bottom: 20px;
+        left: 20px;
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+    
+    #main-menu-rooms-list {
+        display: none; /* Hide on mobile to save space */
+    }
+    
+    .room-code {
+        font-size: 36px;
+        letter-spacing: 6px;
+    }
+}
+
+/* Multiplayer game enhancements */
+.other-player-ship {
+    position: absolute;
+    opacity: 0.7;
+    filter: hue-rotate(180deg);
+}
+
+.player-name-tag {
+    position: absolute;
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 2px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+/* Leaderboard styles */
+.multiplayer-leaderboard {
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #00ffff;
+    border-radius: 10px;
+    padding: 30px;
+    margin-top: 20px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.scores-list {
+    margin: 20px 0;
+}
+
+.score-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    margin: 5px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+.score-item.current-player {
+    border: 2px solid #ffff00;
+    background: rgba(255, 255, 0, 0.1);
+}
+
+.rank {
+    font-weight: bold;
+    color: #ff00ff;
+    min-width: 30px;
+}
+
+/* Notification styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+    z-index: 10000;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.info {
+    background: rgba(0, 123, 255, 0.9);
+}
+
+.notification.success {
+    background: rgba(0, 255, 0, 0.9);
+}
+
+.notification.warning {
+    background: rgba(255, 193, 7, 0.9);
+}
+
+.notification.error {
+    background: rgba(255, 0, 0, 0.9);
+}

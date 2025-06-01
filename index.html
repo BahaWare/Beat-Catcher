@@ -25,6 +25,7 @@
     
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="mobile-styles.css">
+    <link rel="stylesheet" href="multiplayer-styles.css">
     
     <style>
         /* Loading Screen Styles */
@@ -93,15 +94,6 @@
             opacity: 0;
             pointer-events: none;
         }
-        
-        /* Made by position fix */
-        .made-by {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            font-size: 14px;
-            color: #aaa;
-        }
     </style>
 </head>
 <body>
@@ -166,6 +158,57 @@
             <div class="made-by">
                 Made by <a href="https://github.com/BahaWare" target="_blank" rel="noopener noreferrer">Baha</a>
             </div>
+        </div>
+        
+        <!-- Multiplayer Menu -->
+        <div id="multiplayer-menu" class="screen hidden">
+            <h2 class="game-title">MULTIPLAYER</h2>
+            <p class="game-subtitle">Play with friends online!</p>
+            
+            <div class="player-name-section">
+                <label>Your Name:</label>
+                <input type="text" id="player-name-input" placeholder="Enter your name" maxlength="20" class="name-input">
+                <button id="save-name-btn" class="neon-button small">Save</button>
+            </div>
+            
+            <div class="multiplayer-content">
+                <div class="multiplayer-options">
+                    <div class="create-room-section">
+                        <button id="create-room-btn" class="neon-button">CREATE ROOM</button>
+                        <div id="room-code-display" class="hidden">
+                            <p>Room Code:</p>
+                            <h3 id="room-code" class="room-code"></h3>
+                            <button id="copy-code-btn" class="neon-button small">Copy Code</button>
+                        </div>
+                    </div>
+                    
+                    <div class="join-room-section">
+                        <input type="text" id="room-code-input" placeholder="Enter Room Code" maxlength="6" class="room-input">
+                        <button id="join-room-btn" class="neon-button">JOIN ROOM</button>
+                    </div>
+                </div>
+                
+                <div class="active-rooms-section">
+                    <h3>Active Rooms</h3>
+                    <div id="active-rooms-list" class="active-rooms-list">
+                        <p class="no-rooms">No active rooms</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="room-lobby" class="hidden">
+                <h3>Players in Room</h3>
+                <div class="lobby-layout">
+                    <div id="players-list" class="players-list"></div>
+                    <div class="lobby-controls">
+                        <button id="ready-btn" class="neon-button">READY</button>
+                        <button id="start-game-btn" class="neon-button hidden">START GAME</button>
+                        <button id="leave-room-btn" class="neon-button">LEAVE ROOM</button>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="back-from-multiplayer-btn" class="neon-button" style="margin-top: 30px;">BACK TO MENU</button>
         </div>
         
         <div id="skins-screen" class="screen hidden">
@@ -456,6 +499,7 @@
     <script src="firebase-multiplayer-v2.js"></script>
     <script src="game.js"></script>
     <script src="game-multiplayer-fix-v2.js"></script>
+    <script src="multiplayer-game-enhancements.js"></script>
     
     <script>
         // Hide loading screen when everything is loaded
