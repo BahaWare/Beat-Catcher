@@ -1192,5 +1192,5 @@ document.getElementById('reset-settings-button').addEventListener('click', () =>
 
 // Start the game when the page loads
 window.addEventListener('load', () => {
-    const game = new Game();
+    window.game = new Game();
 });
