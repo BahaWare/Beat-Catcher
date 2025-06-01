@@ -1,4 +1,4 @@
-# 🎮 Beat Catcher
+# [🎮 Beat Catcher](https://bahaware.github.io/Beat-Catcher/)
 
 A rhythm-based catching game where you control a ship dodging obstacles to the beat of music. Features bright rainbow colors, visual effects, and dynamic gameplay optimized to increase dopamine!
 
