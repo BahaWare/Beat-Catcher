@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="mobile-styles.css">
     <link rel="stylesheet" href="multiplayer-styles.css">
+    <link rel="stylesheet" href="menu-redesign.css">
     
     <style>
         /* Loading Screen Styles */
@@ -158,6 +159,7 @@
             <div class="made-by">
                 Made by <a href="https://github.com/BahaWare" target="_blank" rel="noopener noreferrer">Baha</a>
             </div>
+            <div id="main-menu-rooms-list"></div>
         </div>
         
         <!-- Multiplayer Menu -->
@@ -175,11 +177,6 @@
                 <div class="multiplayer-options">
                     <div class="create-room-section">
                         <button id="create-room-btn" class="neon-button">CREATE ROOM</button>
-                        <div id="room-code-display" class="hidden">
-                            <p>Room Code:</p>
-                            <h3 id="room-code" class="room-code"></h3>
-                            <button id="copy-code-btn" class="neon-button small">Copy Code</button>
-                        </div>
                     </div>
                     
                     <div class="join-room-section">
@@ -196,6 +193,12 @@
                 </div>
             </div>
             
+            <div id="room-code-display" class="hidden">
+                <p>Room Code:</p>
+                <h3 id="room-code" class="room-code"></h3>
+                <button id="copy-code-btn" class="neon-button small">Copy Code</button>
+            </div>
+            
             <div id="room-lobby" class="hidden">
                 <h3>Players in Room</h3>
                 <div class="lobby-layout">
@@ -208,7 +211,7 @@
                 </div>
             </div>
             
-            <button id="back-from-multiplayer-btn" class="neon-button" style="margin-top: 30px;">BACK TO MENU</button>
+            <button id="back-from-multiplayer-btn" class="neon-button">BACK TO MENU</button>
         </div>
         
         <div id="skins-screen" class="screen hidden">
@@ -500,6 +503,7 @@
     <script src="game.js"></script>
     <script src="game-multiplayer-fix-v2.js"></script>
     <script src="multiplayer-game-enhancements.js"></script>
+    <script src="multiplayer-game-fix.js"></script>
     
     <script>
         // Hide loading screen when everything is loaded
