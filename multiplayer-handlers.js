@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (name && window.game && window.game.multiplayerManager) {
                 window.game.multiplayerManager.setPlayerName(name);
                 console.log('Player name set to:', name);
+                
+                // Show success message
+                showNotification('İsminiz "' + name + '" olarak değiştirildi!', 'success');
             }
         });
         
@@ -151,5 +154,23 @@ window.quickJoinRoom = function(roomId) {
         window.game.multiplayerManager.joinRoom(roomId);
     }
 };
+
+// Notification system
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    const container = document.getElementById('notification-container');
+    if (container) {
+        container.appendChild(notification);
+        notification.classList.add('show');
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+}
 
 console.log('Multiplayer handlers script loaded');

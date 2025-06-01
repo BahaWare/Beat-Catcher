@@ -795,6 +795,13 @@ document.getElementById('reset-settings-button').addEventListener('click', () =>
         const x = Math.random() * (this.width - 200) + 100; // More centered spawning
         
         this.fallingObjects.push(new FallingObject(x, -50, type));
+        
+        // In multiplayer mode, spawn 2x objects for cooperative gameplay
+        if (this.isMultiplayer && this.multiplayerManager && this.multiplayerManager.currentRoom) {
+            const type2 = types[Math.floor(Math.random() * types.length)];
+            const x2 = Math.random() * (this.width - 200) + 100;
+            this.fallingObjects.push(new FallingObject(x2, -50, type2));
+        }
     }
     
     update() {

@@ -1253,3 +1253,54 @@ body {
 .setting-group label {
     font-size: 16px;
 }
+
+/* Enhanced Notification System */
+#notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    pointer-events: none;
+}
+
+.notification {
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 2px solid;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', Arial, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    transform: translateX(400px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: auto;
+    max-width: 300px;
+    word-wrap: break-word;
+}
+
+.notification.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.notification.success {
+    border-color: #00ff00;
+    background: linear-gradient(135deg, rgba(0, 255, 0, 0.2), rgba(0, 255, 255, 0.2));
+    box-shadow: 0 4px 20px rgba(0, 255, 0, 0.3);
+}
+
+.notification.error {
+    border-color: #ff0000;
+    background: linear-gradient(135deg, rgba(255, 0, 0, 0.2), rgba(255, 0, 255, 0.2));
+    box-shadow: 0 4px 20px rgba(255, 0, 0, 0.3);
+}
+
+.notification.info {
+    border-color: #00ffff;
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(255, 255, 0, 0.2));
+    box-shadow: 0 4px 20px rgba(0, 255, 255, 0.3);
+}
