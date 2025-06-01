@@ -143,6 +143,7 @@
             <h1 class="game-title glitch-effect" data-text="BEAT CATCHER v0.1">BEAT CATCHER v0.1</h1>
             <p class="game-subtitle">Catch the rhythm, create the music</p>
             <button id="start-button" class="neon-button">START GAME</button>
+            <button id="multiplayer-button" class="neon-button" style="margin-top: 20px;">MULTIPLAYER</button>
             <button id="modes-button" class="neon-button" style="margin-top: 20px;">GAME MODES</button>
             <button id="skins-button" class="neon-button" style="margin-top: 20px;">CUSTOMIZE SHIP</button>
             <button id="achievements-button" class="neon-button" style="margin-top: 20px;">ACHIEVEMENTS</button>
@@ -431,6 +432,10 @@
         <div id="notification-container"></div>
     </div>
     
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
     <!-- Load all game scripts -->
     <script src="audio-visualizer.js"></script>
     <script src="particle-system.js"></script>
@@ -439,6 +444,7 @@
     <script src="game-modes.js"></script>
     <script src="settings-ui.js"></script>
     <script src="mobile-controls.js"></script>
+    <script src="firebase-multiplayer.js"></script>
     <script src="game.js"></script>
     
     <script>

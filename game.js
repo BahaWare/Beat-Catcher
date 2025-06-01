@@ -1,3 +1,8 @@
+
+// Multiplayer manager instance
+this.multiplayerManager = null;
+this.isMultiplayer = false;
+
 class SkinManager {
     constructor() {
         this.currentSkin = 'default';
@@ -505,6 +510,13 @@ class Game {
     }
     
     async init() {
+
+        // Initialize multiplayer
+        this.multiplayerManager = new FirebaseMultiplayer();
+        this.multiplayerManager.init(this);
+        MultiplayerUI.createMultiplayerMenu();
+        MultiplayerUI.addMultiplayerStyles();
+
         // Initialize audio
         await this.audioVisualizer.init();
         
