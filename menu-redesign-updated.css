@@ -1,0 +1,376 @@
+/* Main Menu Redesign */
+#start-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Made by Baha - Bottom left with box, moved more to right */
+#start-screen .made-by {
+    position: fixed;
+    bottom: 30px;
+    left: 150px;
+    font-size: 16px;
+    color: #ff0000;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #ff0000;
+    padding: 15px 25px;
+    border-radius: 10px;
+    z-index: 100;
+    font-weight: bold;
+}
+
+#start-screen .made-by a {
+    color: #ff0000;
+    text-decoration: none;
+}
+
+/* Active Rooms on Main Menu - Right side */
+#main-menu-rooms-list {
+    position: fixed;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #00ffff;
+    border-radius: 15px;
+    padding: 25px;
+    min-width: 250px;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+}
+
+/* Multiplayer Menu Redesign */
+#multiplayer-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Player name at top */
+#multiplayer-menu .player-name-section {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Main multiplayer content */
+#multiplayer-menu .multiplayer-content {
+    display: flex;
+    gap: 50px;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 50px;
+}
+
+/* Left side - Create/Join */
+#multiplayer-menu .multiplayer-options {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    flex: 1;
+}
+
+/* Create room section */
+.create-room-section {
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Join room section */
+.join-room-section {
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Active rooms - Right side */
+#multiplayer-menu .active-rooms-section {
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #00ffff;
+    border-radius: 15px;
+    padding: 25px;
+    width: 400px;
+    max-height: 600px;
+    overflow-y: auto;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+}
+
+/* Hide create/join sections when in room */
+#multiplayer-menu.in-room .multiplayer-content {
+    display: none;
+}
+
+#multiplayer-menu.in-room .player-name-section {
+    display: none;
+}
+
+/* Room lobby - Left side for players */
+#room-lobby {
+    position: fixed;
+    left: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    padding: 30px;
+    width: 350px;
+}
+
+#room-lobby h3 {
+    text-align: center;
+    color: #00ffff;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+#room-lobby .lobby-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#room-lobby .players-list {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#room-lobby .lobby-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Back button position */
+#multiplayer-menu #back-from-multiplayer-btn {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Room code display - Center with room info */
+#room-code-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.95);
+    border: 3px solid #00ffff;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
+}
+
+#room-code-display p {
+    color: #fff;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+#room-code-display .room-code {
+    font-size: 72px;
+    letter-spacing: 15px;
+    color: #00ffff;
+    text-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+    margin: 30px 0;
+    font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    #multiplayer-menu .multiplayer-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    #multiplayer-menu .active-rooms-section {
+        width: 100%;
+        max-width: 600px;
+        margin-top: 30px;
+    }
+    
+    #room-lobby {
+        position: relative;
+        left: auto;
+        top: auto;
+        transform: none;
+        margin: 20px auto;
+    }
+}
+
+@media (max-width: 768px) {
+    #start-screen .made-by {
+        bottom: 20px;
+        left: 100px;
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+    
+    #main-menu-rooms-list {
+        display: none;
+    }
+    
+    #multiplayer-menu .player-name-section {
+        top: 60px;
+    }
+    
+    #room-code-display .room-code {
+        font-size: 48px;
+        letter-spacing: 10px;
+    }
+}
+
+/* Button hover effects */
+.neon-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+}
+
+/* Active room item styling */
+.active-room-item {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.active-room-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #00ffff;
+    transform: translateX(5px);
+}
+
+.active-room-item .room-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.active-room-item .room-code {
+    font-weight: bold;
+    color: #00ffff;
+    font-size: 18px;
+}
+
+.active-room-item .room-players {
+    color: #ccc;
+    font-size: 14px;
+}
+
+/* Player item styling */
+.player-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    margin: 8px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: all 0.3s;
+}
+
+.player-item.current-player {
+    border-color: #00ffff;
+    background: rgba(0, 255, 255, 0.15);
+}
+
+.player-name {
+    font-weight: bold;
+    color: #fff;
+}
+
+.ready-badge {
+    background: #00ff00;
+    color: #000;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.not-ready-badge {
+    background: #ff0000;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Multiplayer game over screen */
+.multiplayer-game-over {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.95);
+    border: 3px solid #ff0000;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    z-index: 1000;
+}
+
+.multiplayer-game-over h2 {
+    color: #ff0000;
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.multiplayer-game-over .final-stats {
+    color: #fff;
+    margin-bottom: 30px;
+}
+
+.multiplayer-game-over .retry-button {
+    background: linear-gradient(45deg, #ff00ff, #00ffff);
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.multiplayer-game-over .retry-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+}

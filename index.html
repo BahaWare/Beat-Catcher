@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="mobile-styles.css">
     <link rel="stylesheet" href="multiplayer-styles.css">
-    <link rel="stylesheet" href="menu-redesign.css">
+    <link rel="stylesheet" href="menu-redesign-updated.css">
     
     <style>
         /* Loading Screen Styles */
@@ -95,6 +95,22 @@
             opacity: 0;
             pointer-events: none;
         }
+        
+        /* Room preview styles */
+        .room-preview {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .room-preview:hover {
+            background: rgba(0, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
     </style>
 </head>
 <body>
@@ -159,7 +175,7 @@
             <div class="made-by">
                 Made by <a href="https://github.com/BahaWare" target="_blank" rel="noopener noreferrer">Baha</a>
             </div>
-            <div id="main-menu-rooms-list"></div>
+            <div id="main-menu-rooms-list" style="display: none;"></div>
         </div>
         
         <!-- Multiplayer Menu -->
@@ -503,7 +519,7 @@
     <script src="game.js"></script>
     <script src="game-multiplayer-fix-v2.js"></script>
     <script src="multiplayer-game-enhancements.js"></script>
-    <script src="multiplayer-game-fix.js"></script>
+    <script src="multiplayer-complete-fix.js"></script>
     
     <script>
         // Hide loading screen when everything is loaded
