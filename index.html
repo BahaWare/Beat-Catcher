@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beat Catcher - Rhythm Catching Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div id="ui-overlay">
+            <div id="score-display">
+                <div class="score-label">SCORE</div>
+                <div id="score">0</div>
+            </div>
+            
+            <div id="combo-display">
+                <div class="combo-label">STREAK</div>
+                <div id="combo">x0</div>
+            </div>
+            
+            <div id="multiplier-display">
+                <div class="multiplier-ring"></div>
+                <div id="multiplier">Lv.1</div>
+            </div>
+            
+            <div id="timer-display" class="hidden">
+                <div class="timer-label">TIME</div>
+                <div id="timer">60</div>
+            </div>
+            
+            <div id="lives-display" class="hidden">
+                <div class="lives-label">LIVES</div>
+                <div id="lives">❤️❤️❤️</div>
+            </div>
+            
+            <div id="powerup-display"></div>
+        </div>
+        
+        <div id="fps-counter" class="hidden">FPS: 60</div>
+        
+        <div id="start-screen" class="screen">
+            <h1 class="game-title glitch-effect" data-text="BEAT CATCHER v0.1">BEAT CATCHER v0.1</h1>
+            <p class="game-subtitle">Catch the rhythm, create the music</p>
+            <button id="start-button" class="neon-button">START GAME</button>
+            <button id="modes-button" class="neon-button" style="margin-top: 20px;">GAME MODES</button>
+            <button id="skins-button" class="neon-button" style="margin-top: 20px;">CUSTOMIZE SHIP</button>
+            <button id="achievements-button" class="neon-button" style="margin-top: 20px;">ACHIEVEMENTS</button>
+            <button id="settings-button" class="neon-button" style="margin-top: 20px;">SETTINGS</button>
+            <div class="instructions">
+                <p>Use ARROW KEYS or A/D to move</p>
+                <p>Catch falling objects to create rhythm</p>
+                <p>Miss one and it's game over!</p>
+                <p>Level up every 5 catches</p>
+            </div>
+            <div class="made-by">
+                Made by <a href="https://github.com/BahaWare" target="_blank" rel="noopener noreferrer">Baha</a>
+            </div>
+        </div>
+        
+        <div id="skins-screen" class="screen hidden">
+            <h2 class="game-title">CUSTOMIZE SHIP</h2>
+            <p class="game-subtitle">Upload your own image or choose a preset</p>
+            
+            <div class="skin-options">
+                <div class="skin-upload-section">
+                    <input type="file" id="skin-upload" accept="image/*" style="display: none;">
+                    <button id="upload-skin-button" class="neon-button">UPLOAD IMAGE</button>
+                    <p class="upload-hint">Recommended size: 100x70 pixels</p>
+                </div>
+                
+                <div class="skin-presets">
+                    <h3>Preset Skins</h3>
+                    <div class="preset-grid">
+                        <button class="skin-preset active" data-skin="default">
+                            <div class="preset-preview">🚀</div>
+                            <span>Default Ship</span>
+                        </button>
+                        <button class="skin-preset" data-skin="turkey">
+                            <div class="preset-preview">🇹🇷</div>
+                            <span>Turkey</span>
+                        </button>
+                        <button class="skin-preset" data-skin="usa">
+                            <div class="preset-preview">🇺🇸</div>
+                            <span>USA</span>
+                        </button>
+                        <button class="skin-preset" data-skin="germany">
+                            <div class="preset-preview">🇩🇪</div>
+                            <span>Germany</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="current-skin-preview">
+                    <h3>Current Skin</h3>
+                    <canvas id="skin-preview-canvas" width="200" height="140"></canvas>
+                </div>
+            </div>
+            
+            <button id="back-to-menu-button" class="neon-button" style="margin-top: 30px;">BACK TO MENU</button>
+        </div>
+        
+        <div id="game-modes" class="screen hidden">
+            <h2 class="game-title">GAME MODES</h2>
+            <p class="game-subtitle">Choose your challenge</p>
+            
+            <div class="modes-grid">
+                <div class="mode-card" data-mode="classic">
+                    <div class="mode-icon">🎮</div>
+                    <h3>Classic</h3>
+                    <p>The original experience</p>
+                    <span class="mode-status unlocked">PLAY</span>
+                </div>
+                
+                <div class="mode-card" data-mode="survival">
+                    <div class="mode-icon">❤️</div>
+                    <h3>Survival</h3>
+                    <p>3 lives, infinite mode</p>
+                    <span class="mode-status locked">Score 1000 to unlock</span>
+                </div>
+                
+                <div class="mode-card" data-mode="timeAttack">
+                    <div class="mode-icon">⏱️</div>
+                    <h3>Time Attack</h3>
+                    <p>60 seconds to score big</p>
+                    <span class="mode-status locked">Reach level 10 to unlock</span>
+                </div>
+                
+                <div class="mode-card" data-mode="perfectRun">
+                    <div class="mode-icon">⭐</div>
+                    <h3>Perfect Run</h3>
+                    <p>No mistakes allowed</p>
+                    <span class="mode-status locked">Get 50 streak to unlock</span>
+                </div>
+                
+                <div class="mode-card" data-mode="zen">
+                    <div class="mode-icon">🧘</div>
+                    <h3>Zen Mode</h3>
+                    <p>Relax, no game over</p>
+                    <span class="mode-status locked">Play 10 games to unlock</span>
+                </div>
+            </div>
+            
+            <button id="back-from-modes-button" class="neon-button" style="margin-top: 30px;">BACK TO MENU</button>
+        </div>
+        
+        <div id="achievements" class="screen hidden">
+            <h2 class="game-title">ACHIEVEMENTS</h2>
+            <p class="game-subtitle">Track your progress</p>
+            
+            <div class="achievements-stats">
+                <div class="stat-box">
+                    <span class="stat-label">Total Score</span>
+                    <span class="stat-value" id="total-score-stat">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Total Catches</span>
+                    <span class="stat-value" id="total-catches-stat">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Best Streak</span>
+                    <span class="stat-value" id="best-streak-stat">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Player Level</span>
+                    <span class="stat-value" id="player-level-stat">1</span>
+                </div>
+            </div>
+            
+            <div class="achievements-grid" id="achievements-list">
+                <!-- Achievements will be populated here -->
+            </div>
+            
+            <button id="back-from-achievements-button" class="neon-button" style="margin-top: 30px;">BACK TO MENU</button>
+        </div>
+        
+        <div id="settings" class="screen hidden">
+            <h2 class="game-title">SETTINGS</h2>
+            
+            <div class="settings-tabs">
+                <button class="tab-button active" data-tab="graphics">Graphics</button>
+                <button class="tab-button" data-tab="audio">Audio</button>
+                <button class="tab-button" data-tab="gameplay">Gameplay</button>
+                <button class="tab-button" data-tab="controls">Controls</button>
+            </div>
+            
+            <div class="settings-content">
+                <div id="graphics-tab" class="tab-content">
+                    <div class="setting-group">
+                        <label>Quality Preset</label>
+                        <select id="quality-preset">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                            <option value="ultra">Ultra</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>Particle Effects</label>
+                        <input type="checkbox" id="particles-toggle" checked>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>Screen Shake</label>
+                        <input type="checkbox" id="screenshake-toggle" checked>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>Chromatic Aberration</label>
+                        <input type="checkbox" id="chromatic-toggle" checked>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>Motion Blur</label>
+                        <input type="checkbox" id="motionblur-toggle" checked>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>Beat Effects</label>
+                        <input type="checkbox" id="beateffects-toggle" checked>
+                    </div>
+                </div>
+                
+                <div id="audio-tab" class="tab-content hidden">
+                    <div class="setting-group">
+                        <label>Master Volume</label>
+                        <input type="range" id="master-volume" min="0" max="100" value="100">
+                        <span class="volume-value">100%</span>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>SFX Volume</label>
+                        <input type="range" id="sfx-volume" min="0" max="100" value="100">
+                        <span class="volume-value">100%</span>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>Music Volume</label>
+                        <input type="range" id="music-volume" min="0" max="100" value="100">
+                        <span class="volume-value">100%</span>
+                    </div>
+                </div>
+                
+                <div id="gameplay-tab" class="tab-content hidden">
+                    <div class="setting-group">
+                        <label>Difficulty</label>
+                        <select id="difficulty-select">
+                            <option value="easy">Easy</option>
+                            <option value="normal" selected>Normal</option>
+                            <option value="hard">Hard</option>
+                            <option value="extreme">Extreme</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>Auto Restart</label>
+                        <input type="checkbox" id="autorestart-toggle">
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>Show FPS</label>
+                        <input type="checkbox" id="showfps-toggle">
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>Show Hitboxes</label>
+                        <input type="checkbox" id="showhitbox-toggle">
+                    </div>
+                </div>
+                
+                <div id="controls-tab" class="tab-content hidden">
+                    <div class="controls-info">
+                        <p>Click on a key to rebind</p>
+                    </div>
+                    
+                    <div class="control-binding">
+                        <span>Move Left</span>
+                        <button class="key-bind" data-action="moveLeft">A / ←</button>
+                    </div>
+                    
+                    <div class="control-binding">
+                        <span>Move Right</span>
+                        <button class="key-bind" data-action="moveRight">D / →</button>
+                    </div>
+                    
+                    <div class="control-binding">
+                        <span>Pause</span>
+                        <button class="key-bind" data-action="pause">ESC / P</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-buttons">
+                <button id="reset-settings-button" class="neon-button">Reset to Default</button>
+                <button id="back-from-settings-button" class="neon-button">BACK</button>
+            </div>
+        </div>
+        
+        <div id="pause-menu" class="screen hidden">
+            <h2 class="game-title">PAUSED</h2>
+            <div class="pause-buttons">
+                <button id="resume-button" class="neon-button">RESUME</button>
+                <button id="pause-settings-button" class="neon-button">SETTINGS</button>
+                <button id="quit-button" class="neon-button">QUIT TO MENU</button>
+            </div>
+        </div>
+        
+        <div id="game-over-screen" class="screen hidden">
+            <h2 class="game-over-title">GAME OVER</h2>
+            <div class="final-score">
+                <p>Final Score</p>
+                <p id="final-score-value">0</p>
+            </div>
+            <div class="best-combo">
+                <p>Total Catches</p>
+                <p id="best-combo-value">0</p>
+            </div>
+            <div class="exp-gained">
+                <p>Experience Gained</p>
+                <p id="exp-gained-value">+0 XP</p>
+            </div>
+            <button id="restart-button" class="neon-button">PLAY AGAIN</button>
+            <button id="main-menu-button" class="neon-button" style="margin-top: 20px;">MAIN MENU</button>
+        </div>
+        
+        <div id="audio-controls">
+            <button id="mute-button" class="audio-button">🔊</button>
+        </div>
+        
+        <div id="notification-container"></div>
+    </div>
+    
+    <!-- Load all game scripts -->
+    <script src="audio-visualizer.js"></script>
+    <script src="particle-system.js"></script>
+    <script src="powerups.js"></script>
+    <script src="visual-effects.js"></script>
+    <script src="game-modes.js"></script>
+    <script src="settings-ui.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
