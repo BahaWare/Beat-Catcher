@@ -49,7 +49,7 @@ Simply open `index.html` in a modern web browser.
 ### Local Development
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/beat-catcher.git
+git clone https://github.com/BahaWare/beat-catcher.git
 
 # Navigate to the project
 cd beat-catcher
