@@ -4,10 +4,107 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Beat Catcher - Rhythm Catching Game</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="A rhythm-based catching game where you control a ship dodging obstacles to the beat of music. Features bright rainbow colors and dynamic gameplay!">
+    <meta name="keywords" content="rhythm game, music game, arcade game, browser game, html5 game, beat catcher">
+    <meta name="author" content="BahaWare">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Beat Catcher - Rhythm Catching Game">
+    <meta property="og:description" content="Control your ship, catch the rhythm, create the music! A dopamine-inducing rhythm game with bright colors and dynamic gameplay.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://github.com/BahaWare/beat-catcher">
+    <meta property="og:image" content="https://raw.githubusercontent.com/BahaWare/beat-catcher/main/screenshot.png">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Beat Catcher - Rhythm Catching Game">
+    <meta name="twitter:description" content="Control your ship, catch the rhythm, create the music!">
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/BahaWare/beat-catcher/main/screenshot.png">
+    
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="mobile-styles.css">
+    
+    <style>
+        /* Loading Screen Styles */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        #loading-screen h2 {
+            font-size: 48px;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00, #ff00ff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbow-text 3s ease infinite;
+        }
+        
+        .loading-bar-container {
+            width: 300px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .loading-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff00ff, #00ffff, #ffff00);
+            background-size: 200% 100%;
+            animation: loading-progress 2s ease-in-out infinite, rainbow-bg 3s linear infinite;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        @keyframes loading-progress {
+            0% { width: 0%; }
+            50% { width: 100%; }
+            100% { width: 0%; }
+        }
+        
+        @keyframes rainbow-bg {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        
+        .loading-text {
+            margin-top: 20px;
+            color: #fff;
+            font-size: 18px;
+            opacity: 0.8;
+        }
+        
+        #loading-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <h2>BEAT CATCHER</h2>
+        <div class="loading-bar-container">
+            <div class="loading-bar"></div>
+        </div>
+        <p class="loading-text">Loading awesome beats...</p>
+    </div>
+    
     <div id="game-container">
         <canvas id="gameCanvas"></canvas>
         
@@ -343,5 +440,18 @@
     <script src="settings-ui.js"></script>
     <script src="mobile-controls.js"></script>
     <script src="game.js"></script>
+    
+    <script>
+        // Hide loading screen when everything is loaded
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loadingScreen = document.getElementById('loading-screen');
+                loadingScreen.classList.add('fade-out');
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }, 1500); // Show loading screen for at least 1.5 seconds
+        });
+    </script>
 </body>
 </html>
