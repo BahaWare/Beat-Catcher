@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Player name set to:', name);
                 
                 // Show success message
-                showNotification('İsminiz "' + name + '" olarak değiştirildi!', 'success');
+                showNotification('Your name has been changed to "' + name + '"!', 'success');
             }
         });
         

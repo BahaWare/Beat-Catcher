@@ -87,42 +87,38 @@ class FirebaseMultiplayer {
     }
     
     updateActiveRoomsList(rooms) {
-        const roomsList = document.getElementById('active-rooms-list');
-        const mainMenuRoomsList = document.getElementById('main-menu-rooms-list');
+        const activeRoomsList = document.getElementById('active-rooms-list');
+        if (!activeRoomsList) return;
         
-        if (roomsList) {
-            roomsList.innerHTML = '';
-            
-            if (Object.keys(rooms).length === 0) {
-                roomsList.innerHTML = '<p class="no-rooms">No active rooms</p>';
-            } else {
-                Object.entries(rooms).forEach(([roomId, roomData]) => {
-                    const roomDiv = document.createElement('div');
-                    roomDiv.className = 'active-room-item';
-                    roomDiv.innerHTML = `
-                        <div class="room-info">
-                            <span class="room-host">${roomData.hostName}'s Room</span>
-                            <span class="room-players">${roomData.playerCount}/${roomData.maxPlayers}</span>
-                        </div>
-                        <button class="join-btn" onclick="game.multiplayerManager.quickJoinRoom('${roomId}')">JOIN</button>
-                    `;
-                    roomsList.appendChild(roomDiv);
-                });
-            }
+        // Clear existing rooms
+        activeRoomsList.innerHTML = '';
+        
+        const roomKeys = Object.keys(rooms);
+        
+        if (roomKeys.length === 0) {
+            activeRoomsList.innerHTML = '<p class="no-rooms">No active rooms</p>';
+            return;
         }
         
-        // Update main menu rooms list
-        if (mainMenuRoomsList) {
-            mainMenuRoomsList.innerHTML = '';
-            const roomCount = Object.keys(rooms).length;
+        roomKeys.forEach(roomId => {
+            const room = rooms[roomId];
+            const roomElement = document.createElement('div');
+            roomElement.className = 'room-preview';
+            roomElement.innerHTML = `
+                <div class="room-info">
+                    <strong>Room: ${roomId}</strong>
+                    <span>Players: ${room.playerCount || 0}/4</span>
+                </div>
+            `;
             
-            if (roomCount > 0) {
-                mainMenuRoomsList.innerHTML = `
-                    <h3>Active Servers</h3>
-                    <p class="room-count">${roomCount} room${roomCount !== 1 ? 's' : ''} online</p>
-                `;
-            }
-        }
+            roomElement.addEventListener('click', () => {
+                if (window.quickJoinRoom) {
+                    window.quickJoinRoom(roomId);
+                }
+            });
+            
+            activeRoomsList.appendChild(roomElement);
+        });
     }
     
     quickJoinRoom(roomId) {
@@ -611,46 +607,19 @@ class MultiplayerUI {
                     margin-top: 15px;
                 }
                 
-                .active-room-item {
+                .room-preview {
                     background: rgba(255, 255, 255, 0.1);
-                    border-radius: 5px;
-                    padding: 10px;
-                    margin-bottom: 10px;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                }
-                
-                .room-info {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 5px;
-                }
-                
-                .room-host {
-                    font-weight: bold;
-                    color: #00ffff;
-                }
-                
-                .room-players {
-                    font-size: 14px;
-                    color: #aaa;
-                }
-                
-                .join-btn {
-                    background: rgba(0, 255, 0, 0.3);
-                    border: 1px solid #00ff00;
-                    color: #00ff00;
-                    padding: 5px 15px;
+                    padding: 8px 12px;
+                    margin: 5px 0;
                     border-radius: 5px;
                     cursor: pointer;
-                    font-size: 14px;
                     transition: all 0.3s;
+                    font-size: 14px;
                 }
                 
-                .join-btn:hover {
-                    background: rgba(0, 255, 0, 0.5);
-                    transform: scale(1.05);
+                .room-preview:hover {
+                    background: rgba(0, 255, 255, 0.2);
+                    transform: translateX(5px);
                 }
                 
                 .no-rooms {
@@ -658,180 +627,9 @@ class MultiplayerUI {
                     color: #666;
                     font-style: italic;
                 }
-                
-                .create-room-section, .join-room-section {
-                    text-align: center;
-                }
-                
-                .room-code {
-                    font-size: 48px;
-                    letter-spacing: 8px;
-                    color: #00ffff;
-                    text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
-                    margin: 20px 0;
-                }
-                
-                .room-input {
-                    background: rgba(255, 255, 255, 0.1);
-                    border: 2px solid rgba(255, 255, 255, 0.3);
-                    color: #fff;
-                    padding: 15px;
-                    font-size: 24px;
-                    text-align: center;
-                    letter-spacing: 4px;
-                    text-transform: uppercase;
-                    border-radius: 10px;
-                    margin-bottom: 20px;
-                    width: 300px;
-                }
-                
-                .room-input:focus {
-                    outline: none;
-                    border-color: #00ffff;
-                    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-                }
-                
-                #room-lobby {
-                    background: rgba(0, 0, 0, 0.5);
-                    border: 2px solid rgba(255, 255, 255, 0.2);
-                    border-radius: 10px;
-                    padding: 30px;
-                    width: 400px;
-                }
-                
-                .players-list {
-                    margin: 20px 0;
-                    max-height: 300px;
-                    overflow-y: auto;
-                }
-                
-                .player-item {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding: 10px;
-                    margin: 5px 0;
-                    background: rgba(255, 255, 255, 0.1);
-                    border-radius: 5px;
-                }
-                
-                .player-item.current-player {
-                    border: 2px solid #00ffff;
-                }
-                
-                .ready-badge {
-                    background: #00ff00;
-                    color: #000;
-                    padding: 2px 8px;
-                    border-radius: 3px;
-                    font-size: 12px;
-                    font-weight: bold;
-                }
-                
-                .not-ready-badge {
-                    background: #ff0000;
-                    color: #fff;
-                    padding: 2px 8px;
-                    border-radius: 3px;
-                    font-size: 12px;
-                    font-weight: bold;
-                }
-                
-                .lobby-controls {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 10px;
-                }
-                
-                .neon-button.small {
-                    padding: 10px 20px;
-                    font-size: 16px;
-                }
-                
-                .multiplayer-leaderboard {
-                    background: rgba(0, 0, 0, 0.8);
-                    border: 2px solid #00ffff;
-                    border-radius: 10px;
-                    padding: 30px;
-                    margin-top: 20px;
-                }
-                
-                .scores-list {
-                    margin: 20px 0;
-                }
-                
-                .score-item {
-                    display: flex;
-                    justify-content: space-between;
-                    padding: 10px;
-                    margin: 5px 0;
-                    background: rgba(255, 255, 255, 0.1);
-                    border-radius: 5px;
-                }
-                
-                .score-item.current-player {
-                    border: 2px solid #ffff00;
-                    background: rgba(255, 255, 0, 0.1);
-                }
-                
-                .rank {
-                    font-weight: bold;
-                    color: #ff00ff;
-                }
-                
-                /* Main menu active servers */
-                #main-menu-rooms-list {
-                    position: absolute;
-                    right: 20px;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    background: rgba(0, 0, 0, 0.7);
-                    border: 2px solid rgba(255, 255, 255, 0.2);
-                    border-radius: 10px;
-                    padding: 20px;
-                    min-width: 200px;
-                }
-                
-                #main-menu-rooms-list h3 {
-                    color: #00ffff;
-                    margin-bottom: 10px;
-                    font-size: 18px;
-                }
-                
-                .room-count {
-                    color: #aaa;
-                    font-size: 14px;
-                }
-                
-                /* Made by position */
-                .made-by {
-                    position: absolute;
-                    bottom: 20px;
-                    left: 20px;
-                    font-size: 14px;
-                    color: #aaa;
-                }
-                
-                /* Other players' ships */
-                .other-player-ship {
-                    position: absolute;
-                    opacity: 0.7;
-                    filter: hue-rotate(180deg);
-                }
             </style>
         `;
         
         document.head.insertAdjacentHTML('beforeend', styles);
-    }
-    
-    static addMainMenuRoomsList() {
-        const mainMenuHTML = `
-            <div id="main-menu-rooms-list"></div>
-        `;
-        
-        const startScreen = document.getElementById('start-screen');
-        if (startScreen) {
-            startScreen.insertAdjacentHTML('beforeend', mainMenuHTML);
-        }
     }
 }

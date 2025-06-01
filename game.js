@@ -1050,6 +1050,15 @@ document.getElementById('reset-settings-button').addEventListener('click', () =>
             // Draw ship
             this.ship.draw(this.ctx);
             
+            // Draw other players in multiplayer
+            if (this.isMultiplayer && this.multiplayerManager && this.multiplayerManager.otherPlayers) {
+                Object.values(this.multiplayerManager.otherPlayers).forEach(player => {
+                    if (player.x !== undefined && player.y !== undefined) {
+                        this.drawOtherPlayer(player);
+                    }
+                });
+            }
+            
             // Draw level indicator
             this.drawLevel();
             
@@ -1166,6 +1175,77 @@ document.getElementById('reset-settings-button').addEventListener('click', () =>
                     this.ctx.fillRect(x + 2, indicatorY + 2 + (index * 6), beatWidth - 6, 4);
                 });
             }
+        }
+        
+        this.ctx.restore();
+    }
+    
+    drawOtherPlayer(player) {
+        this.ctx.save();
+        this.ctx.translate(player.x, player.y);
+        
+        // Draw other player ship with different color
+        const gradient = this.ctx.createLinearGradient(0, -35, 0, 35);
+        gradient.addColorStop(0, '#ff6600');
+        gradient.addColorStop(0.5, '#ffaa00');
+        gradient.addColorStop(1, '#ff6600');
+        
+        this.ctx.fillStyle = gradient;
+        
+        // Main body (smaller than main player)
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, -35);
+        this.ctx.bezierCurveTo(-20, -20, -30, 20, -30, 35);
+        this.ctx.lineTo(-15, 35);
+        this.ctx.lineTo(-15, 20);
+        this.ctx.lineTo(0, 15);
+        this.ctx.lineTo(15, 20);
+        this.ctx.lineTo(15, 35);
+        this.ctx.lineTo(30, 35);
+        this.ctx.bezierCurveTo(30, 20, 20, -20, 0, -35);
+        this.ctx.closePath();
+        this.ctx.fill();
+        
+        // Wings
+        this.ctx.fillStyle = 'rgba(255, 102, 0, 0.7)';
+        
+        // Left wing
+        this.ctx.beginPath();
+        this.ctx.moveTo(-15, 0);
+        this.ctx.lineTo(-35, -10);
+        this.ctx.lineTo(-30, 15);
+        this.ctx.lineTo(-15, 15);
+        this.ctx.closePath();
+        this.ctx.fill();
+        
+        // Right wing
+        this.ctx.beginPath();
+        this.ctx.moveTo(15, 0);
+        this.ctx.lineTo(35, -10);
+        this.ctx.lineTo(30, 15);
+        this.ctx.lineTo(15, 15);
+        this.ctx.closePath();
+        this.ctx.fill();
+        
+        // Engine glow
+        this.ctx.fillStyle = 'rgba(255, 102, 0, 0.8)';
+        this.ctx.shadowBlur = 15;
+        this.ctx.shadowColor = '#ff6600';
+        this.ctx.beginPath();
+        this.ctx.ellipse(-15, 35, 6, 4, 0, 0, Math.PI * 2);
+        this.ctx.fill();
+        this.ctx.beginPath();
+        this.ctx.ellipse(15, 35, 6, 4, 0, 0, Math.PI * 2);
+        this.ctx.fill();
+        
+        // Player name above ship
+        if (player.name) {
+            this.ctx.shadowBlur = 0;
+            this.ctx.fillStyle = '#ffffff';
+            this.ctx.font = 'bold 14px Arial';
+            this.ctx.textAlign = 'center';
+            this.ctx.textBaseline = 'bottom';
+            this.ctx.fillText(player.name, 0, -45);
         }
         
         this.ctx.restore();
