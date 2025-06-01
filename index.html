@@ -507,7 +507,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     
-    <!-- Load all game scripts -->
+    <!-- Load game scripts -->
     <script src="audio-visualizer.js"></script>
     <script src="particle-system.js"></script>
     <script src="powerups.js"></script>
@@ -517,21 +517,108 @@
     <script src="mobile-controls.js"></script>
     <script src="firebase-multiplayer-v2.js"></script>
     <script src="game.js"></script>
-    <script src="game-multiplayer-fix-v2.js"></script>
-    <script src="multiplayer-game-enhancements.js"></script>
-    <script src="multiplayer-complete-fix.js"></script>
-    <script src="simple-multiplayer-fix.js"></script>
     
     <script>
+        // Simple button handlers without eval or complex functions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Multiplayer button
+            const multiplayerBtn = document.getElementById('multiplayer-button');
+            if (multiplayerBtn) {
+                multiplayerBtn.addEventListener('click', function() {
+                    document.getElementById('start-screen').classList.add('hidden');
+                    document.getElementById('multiplayer-menu').classList.remove('hidden');
+                    
+                    // Initialize multiplayer if available
+                    if (window.game && window.FirebaseMultiplayer) {
+                        try {
+                            if (!window.game.multiplayerManager) {
+                                window.game.multiplayerManager = new FirebaseMultiplayer();
+                                window.game.multiplayerManager.init(window.game);
+                            }
+                            if (window.game.multiplayerManager.listenToActiveRooms) {
+                                window.game.multiplayerManager.listenToActiveRooms();
+                            }
+                        } catch (error) {
+                            console.log('Multiplayer initialization failed:', error);
+                        }
+                    }
+                });
+            }
+            
+            // Back from multiplayer
+            const backBtn = document.getElementById('back-from-multiplayer-btn');
+            if (backBtn) {
+                backBtn.addEventListener('click', function() {
+                    document.getElementById('multiplayer-menu').classList.add('hidden');
+                    document.getElementById('start-screen').classList.remove('hidden');
+                });
+            }
+            
+            // Other menu buttons
+            const modesBtn = document.getElementById('modes-button');
+            if (modesBtn) {
+                modesBtn.addEventListener('click', function() {
+                    document.getElementById('start-screen').classList.add('hidden');
+                    document.getElementById('game-modes').classList.remove('hidden');
+                });
+            }
+            
+            const skinsBtn = document.getElementById('skins-button');
+            if (skinsBtn) {
+                skinsBtn.addEventListener('click', function() {
+                    document.getElementById('start-screen').classList.add('hidden');
+                    document.getElementById('skins-screen').classList.remove('hidden');
+                });
+            }
+            
+            const achievementsBtn = document.getElementById('achievements-button');
+            if (achievementsBtn) {
+                achievementsBtn.addEventListener('click', function() {
+                    document.getElementById('start-screen').classList.add('hidden');
+                    document.getElementById('achievements').classList.remove('hidden');
+                });
+            }
+            
+            const settingsBtn = document.getElementById('settings-button');
+            if (settingsBtn) {
+                settingsBtn.addEventListener('click', function() {
+                    document.getElementById('start-screen').classList.add('hidden');
+                    document.getElementById('settings').classList.remove('hidden');
+                });
+            }
+            
+            // Back buttons for all menus
+            const backButtons = [
+                'back-from-modes-button',
+                'back-to-menu-button',
+                'back-from-achievements-button',
+                'back-from-settings-button'
+            ];
+            
+            backButtons.forEach(function(buttonId) {
+                const btn = document.getElementById(buttonId);
+                if (btn) {
+                    btn.addEventListener('click', function() {
+                        // Hide all screens
+                        const screens = document.querySelectorAll('.screen');
+                        screens.forEach(function(screen) {
+                            screen.classList.add('hidden');
+                        });
+                        // Show start screen
+                        document.getElementById('start-screen').classList.remove('hidden');
+                    });
+                }
+            });
+        });
+        
         // Hide loading screen when everything is loaded
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const loadingScreen = document.getElementById('loading-screen');
-                loadingScreen.classList.add('fade-out');
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                }, 500);
-            }, 1500); // Show loading screen for at least 1.5 seconds
+        window.addEventListener('load', function() {
+            const loadingScreen = document.getElementById('loading-screen');
+            loadingScreen.classList.add('fade-out');
+            // Remove loading screen after fade
+            window.setTimeout(function() {
+                loadingScreen.style.display = 'none';
+            }, 1500);
         });
     </script>
 </body>
