@@ -15,14 +15,7 @@ class FirebaseMultiplayer {
         
         // Firebase configuration - Replace with your own config
         this.firebaseConfig = {
-        apiKey: "AIzaSyCK2Un27_VcuqOm-EiCmrabD7K84DZMkFY",
-        authDomain: "beatcatcher-1ae8f.firebaseapp.com",
-        databaseURL: "https://beatcatcher-1ae8f-default-rtdb.firebaseio.com",
-        projectId: "beatcatcher-1ae8f",
-        storageBucket: "beatcatcher-1ae8f.firebasestorage.app",
-        messagingSenderId: "246141825582",
-        appId: "1:246141825582:web:b1fee7077ee020de32a5bf",
-        measurementId: "G-92S4DY76H4"
+
         };
     }
     
