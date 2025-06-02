@@ -1,3 +1,10 @@
+/* Enhanced Mobile Responsive Design for Beat Catcher */
+
+/* San Francisco Font Family for all elements */
+* {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+}
+
 /* Mobile Controls */
 #mobile-controls {
     display: none;
@@ -32,6 +39,8 @@
     user-select: none;
     -webkit-user-select: none;
     transition: all 0.2s;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .touch-button:active {
@@ -43,6 +52,9 @@
 
 .touch-button svg {
     pointer-events: none;
+    width: 32px;
+    height: 32px;
+    fill: #ffffff;
 }
 
 .mobile-hint {
@@ -54,51 +66,124 @@
     font-size: 14px;
     text-align: center;
     pointer-events: none;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 8px 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
 }
 
-/* Mobile-specific styles */
+/* Mobile Device Specific Styles */
 .mobile-device #ui-overlay {
     top: 10px;
 }
 
 .mobile-device .screen {
-    padding: 20px;
+    padding: 20px 15px;
 }
 
 .mobile-device .game-title {
-    font-size: 36px !important;
+    font-size: 42px !important;
+    margin-bottom: 15px !important;
+    letter-spacing: 0.5px !important;
+}
+
+.mobile-device .game-subtitle {
+    font-size: 18px !important;
+    margin-bottom: 30px !important;
 }
 
 .mobile-device .neon-button {
-    font-size: 16px !important;
-    padding: 15px 25px !important;
-    margin: 10px 0 !important;
+    font-size: 18px !important;
+    padding: 16px 32px !important;
+    margin: 8px 0 !important;
+    min-height: 50px !important;
+    border-radius: 25px !important;
 }
 
 .mobile-device .instructions {
+    font-size: 16px;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.mobile-device .instructions p {
     font-size: 14px;
-    padding: 10px;
+    margin: 8px 0;
 }
 
 .mobile-device #score-display,
-.mobile-device #combo-display,
-.mobile-device #multiplier-display {
-    transform: scale(0.8);
+.mobile-device #combo-display {
+    transform: scale(0.85);
+    font-size: 20px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+.mobile-device #multiplier-display {
+    transform: scale(0.8);
+    left: 30px;
+}
+
+/* Tablet Styles (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
     .game-title {
-        font-size: 48px;
+        font-size: 56px;
     }
     
     .neon-button {
-        font-size: 16px;
-        padding: 12px 24px;
+        font-size: 20px;
+        padding: 18px 36px;
+    }
+    
+    .preset-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .modes-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Mobile Styles (max-width: 768px) */
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+    
+    #game-container {
+        min-height: 100vh;
+        min-height: -webkit-fill-available;
+    }
+    
+    .game-title {
+        font-size: 48px;
+        margin-bottom: 15px;
+        text-align: center;
+        line-height: 1.1;
+    }
+    
+    .game-subtitle {
+        font-size: 20px;
+        margin-bottom: 25px;
+    }
+    
+    .neon-button {
+        font-size: 18px;
+        padding: 16px 32px;
+        margin: 8px 0;
+        min-height: 50px;
+        width: 100%;
+        max-width: 300px;
+        border-radius: 25px;
     }
     
     .instructions {
+        font-size: 16px;
+        padding: 15px;
+        margin-top: 20px;
+    }
+    
+    .instructions p {
         font-size: 14px;
+        margin: 6px 0;
     }
     
     #mobile-controls {
@@ -108,45 +193,229 @@
     /* Hide desktop-specific elements */
     .made-by {
         font-size: 12px;
+        bottom: 20px;
     }
     
     /* Adjust game UI for mobile */
     #ui-overlay {
         transform: scale(0.9);
+        transform-origin: top left;
+    }
+    
+    #score-display, #combo-display {
+        font-size: 18px;
+        top: 15px;
+    }
+    
+    #score-display {
+        left: 15px;
+    }
+    
+    #combo-display {
+        right: 15px;
     }
     
     /* Settings screen adjustments */
     .settings-tabs {
         flex-wrap: wrap;
+        gap: 8px;
     }
     
     .tab-button {
         font-size: 14px;
-        padding: 8px 12px;
+        padding: 10px 16px;
+        flex: 1;
+        min-width: 120px;
+    }
+    
+    .settings-content {
+        max-width: 100%;
+        padding: 0 10px;
+    }
+    
+    .tab-content {
+        padding: 20px 15px;
     }
     
     .setting-group {
-        margin: 10px 0;
-    }
-    
-    /* Skin selection adjustments */
-    .preset-grid {
-        grid-template-columns: repeat(2, 1fr);
+        margin: 15px 0;
+        flex-direction: column;
+        align-items: flex-start;
         gap: 10px;
     }
     
-    .skin-preset {
+    .setting-group label {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+    
+    .setting-group input[type="range"] {
+        width: 100%;
+    }
+    
+    .setting-group select {
+        width: 100%;
         padding: 10px;
+        font-size: 16px;
+    }
+    
+    /* Skin selection adjustments */
+    .skin-options {
+        gap: 20px;
+        padding: 0 10px;
+    }
+    
+    .preset-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .skin-preset {
+        padding: 15px 10px;
+    }
+    
+    .preset-preview {
+        font-size: 36px;
+    }
+    
+    .skin-preset span {
+        font-size: 12px;
     }
     
     /* Game modes grid */
     .modes-grid {
         grid-template-columns: 1fr;
         gap: 15px;
+        max-width: 100%;
     }
     
     .mode-card {
+        padding: 20px 15px;
+        text-align: left;
+    }
+    
+    .mode-icon {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+    
+    .mode-card h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+    
+    .mode-card p {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+    
+    /* Achievements adjustments */
+    .achievements-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .stat-box {
+        padding: 15px 10px;
+    }
+    
+    .stat-value {
+        font-size: 20px;
+    }
+    
+    .achievements-grid {
+        grid-template-columns: 1fr;
+        max-height: 300px;
+    }
+    
+    .achievement-item {
         padding: 15px;
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .achievement-icon {
+        font-size: 32px;
+    }
+    
+    /* Multiplayer adjustments */
+    .multiplayer-content {
+        padding: 20px 15px;
+    }
+    
+    .room-preview {
+        padding: 15px;
+        margin: 10px 0;
+    }
+    
+    .players-list {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    
+    .player-item {
+        padding: 12px;
+        margin: 8px 0;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    /* Notification adjustments */
+    #notification-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+    }
+    
+    .notification {
+        max-width: 100%;
+        font-size: 14px;
+        padding: 12px 16px;
+    }
+}
+
+/* Small Mobile Styles (max-width: 480px) */
+@media (max-width: 480px) {
+    .game-title {
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+    
+    .game-subtitle {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+    
+    .neon-button {
+        font-size: 16px;
+        padding: 14px 28px;
+        max-width: 280px;
+    }
+    
+    .preset-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .achievements-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .touch-button {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .touch-button svg {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .mobile-hint {
+        font-size: 12px;
+        padding: 6px 12px;
     }
 }
 
@@ -154,27 +423,46 @@
 @media (pointer: coarse) {
     .neon-button {
         min-height: 50px;
+        padding: 16px 32px;
     }
     
     .touch-button {
-        width: 100px;
-        height: 100px;
+        width: 90px;
+        height: 90px;
     }
     
     input[type="checkbox"] {
-        width: 30px;
-        height: 30px;
+        width: 24px;
+        height: 24px;
+        transform: scale(1.5);
     }
     
     select, input[type="range"] {
-        min-height: 40px;
+        min-height: 44px;
+        padding: 12px;
+    }
+    
+    .tab-button {
+        min-height: 44px;
+        padding: 12px 20px;
+    }
+    
+    .skin-preset {
+        min-height: 80px;
+        padding: 15px;
     }
 }
 
-/* Prevent zoom on mobile */
+/* Prevent zoom on mobile inputs */
 @media (max-width: 768px) {
-    input, select, textarea {
+    input, select, textarea, button {
         font-size: 16px !important;
+    }
+    
+    input[type="text"], input[type="email"], input[type="password"] {
+        font-size: 16px !important;
+        padding: 12px !important;
+        border-radius: 8px !important;
     }
 }
 
@@ -182,18 +470,154 @@
 @media (max-width: 768px) and (orientation: landscape) {
     .game-title {
         font-size: 32px;
+        margin-bottom: 8px;
+    }
+    
+    .game-subtitle {
+        font-size: 14px;
+        margin-bottom: 15px;
     }
     
     .screen {
-        padding: 10px;
+        padding: 15px 10px;
+    }
+    
+    .neon-button {
+        font-size: 14px;
+        padding: 12px 24px;
+        margin: 5px 0;
     }
     
     #mobile-controls {
+        bottom: 5px;
+    }
+    
+    .touch-controls {
         bottom: 10px;
+        padding: 0 15px;
     }
     
     .touch-button {
         width: 60px;
         height: 60px;
+    }
+    
+    .touch-button svg {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .mobile-hint {
+        bottom: 80px;
+        font-size: 11px;
+    }
+    
+    .made-by {
+        font-size: 10px;
+        bottom: 10px;
+    }
+    
+    /* Adjust UI overlay for landscape */
+    #ui-overlay {
+        transform: scale(0.8);
+    }
+    
+    #score-display, #combo-display {
+        font-size: 16px;
+        top: 10px;
+    }
+    
+    /* Settings in landscape */
+    .settings-tabs {
+        margin-bottom: 15px;
+    }
+    
+    .tab-content {
+        padding: 15px 10px;
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+    
+    /* Modes grid in landscape */
+    .modes-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .mode-card {
+        padding: 15px 10px;
+    }
+    
+    .mode-icon {
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
+    
+    .mode-card h3 {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+    
+    .mode-card p {
+        font-size: 12px;
+    }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .game-title {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    
+    .neon-button {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+/* Safe area adjustments for notched devices */
+@supports (padding: max(0px)) {
+    .screen {
+        padding-left: max(20px, env(safe-area-inset-left));
+        padding-right: max(20px, env(safe-area-inset-right));
+        padding-top: max(20px, env(safe-area-inset-top));
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+    }
+    
+    #mobile-controls {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+    
+    .touch-controls {
+        bottom: max(20px, env(safe-area-inset-bottom));
+    }
+}
+
+/* Dark mode adjustments for mobile */
+@media (prefers-color-scheme: dark) {
+    .touch-button {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+    
+    .mobile-hint {
+        background: rgba(0, 0, 0, 0.7);
+        color: rgba(255, 255, 255, 0.8);
+    }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .touch-button {
+        transition: none;
+    }
+    
+    .neon-button {
+        transition: none;
+    }
+    
+    .game-title {
+        animation: none;
     }
 }

@@ -10,6 +10,8 @@ class FirebaseMultiplayer {
         this.otherPlayers = {};
         this.gameInstance = null;
         this.activeRoomsListener = null;
+        this.sharedObjects = {};
+        this.objectSyncTimer = null;
         
         // Firebase configuration - Replace with your own config
         this.firebaseConfig = {
@@ -108,6 +110,7 @@ class FirebaseMultiplayer {
                 <div class="room-info">
                     <strong>Room: ${roomId}</strong>
                     <span>Players: ${room.playerCount || 0}/4</span>
+                    <span class="room-status">${room.gameState || 'waiting'}</span>
                 </div>
             `;
             
@@ -143,7 +146,13 @@ class FirebaseMultiplayer {
                 maxPlayers: 4,
                 gameMode: 'coop'
             },
-            playerCount: 0
+            playerCount: 0,
+            sharedObjects: {},
+            gameSync: {
+                level: 1,
+                globalScore: 0,
+                startTime: null
+            }
         });
         
         // Add to active rooms list
@@ -151,6 +160,7 @@ class FirebaseMultiplayer {
             hostName: this.playerName,
             playerCount: 1,
             maxPlayers: 4,
+            gameState: 'waiting',
             createdAt: firebase.database.ServerValue.TIMESTAMP
         });
         
@@ -162,6 +172,9 @@ class FirebaseMultiplayer {
         
         // Listen for game state changes
         this.listenToGameState();
+        
+        // Listen for shared objects
+        this.listenToSharedObjects();
         
         return roomId;
     }
@@ -185,6 +198,12 @@ class FirebaseMultiplayer {
                 return;
             }
             
+            // Check if game is already in progress
+            if (roomData.gameState === 'playing') {
+                this.showNotification('Game already in progress!', 'warning');
+                return;
+            }
+            
             // Join the room
             this.joinRoomAsPlayer();
             
@@ -194,8 +213,12 @@ class FirebaseMultiplayer {
             // Listen for game state changes
             this.listenToGameState();
             
+            // Listen for shared objects
+            this.listenToSharedObjects();
+            
             // Show room UI
             document.getElementById('room-lobby').classList.remove('hidden');
+            document.querySelector('.multiplayer-content').style.display = 'none';
             
             this.showNotification('Joined room successfully!', 'success');
         });
@@ -212,6 +235,7 @@ class FirebaseMultiplayer {
             position: { x: 400, y: 500 },
             skinType: this.gameInstance?.skinManager?.currentSkin || 'default',
             ready: false,
+            isAlive: true,
             joinedAt: firebase.database.ServerValue.TIMESTAMP
         });
         
@@ -249,7 +273,9 @@ class FirebaseMultiplayer {
                         score: player.score || 0,
                         catches: player.catches || 0,
                         streak: player.streak || 0,
-                        ready: player.ready || false
+                        ready: player.ready || false,
+                        isAlive: player.isAlive !== false,
+                        skinType: player.skinType || 'default'
                     };
                 }
             });
@@ -305,34 +331,156 @@ class FirebaseMultiplayer {
             }
         });
         
-        // Listen for falling objects (host broadcasts)
-        if (!this.isHost) {
-            this.roomRef.child('fallingObjects').on('child_added', (snapshot) => {
-                const objData = snapshot.val();
-                this.gameInstance.spawnSyncedObject(objData);
-            });
+        // Listen for game sync data
+        this.roomRef.child('gameSync').on('value', (snapshot) => {
+            const syncData = snapshot.val();
+            if (syncData && this.gameInstance.isMultiplayer) {
+                // Sync level and global score
+                if (syncData.level && syncData.level !== this.gameInstance.level) {
+                    this.gameInstance.level = syncData.level;
+                    this.gameInstance.updateUI();
+                }
+            }
+        });
+    }
+    
+    listenToSharedObjects() {
+        this.roomRef.child('sharedObjects').on('child_added', (snapshot) => {
+            const objData = snapshot.val();
+            const objId = snapshot.key;
+            
+            if (objData && !this.sharedObjects[objId]) {
+                // Create shared object in game
+                this.createSharedObject(objId, objData);
+            }
+        });
+        
+        this.roomRef.child('sharedObjects').on('child_changed', (snapshot) => {
+            const objData = snapshot.val();
+            const objId = snapshot.key;
+            
+            if (objData && objData.caughtBy && objData.caughtBy !== this.playerId) {
+                // Object was caught by another player, remove it locally
+                this.removeSharedObject(objId);
+            }
+        });
+        
+        this.roomRef.child('sharedObjects').on('child_removed', (snapshot) => {
+            const objId = snapshot.key;
+            this.removeSharedObject(objId);
+        });
+    }
+    
+    createSharedObject(objId, objData) {
+        if (!this.gameInstance || this.gameInstance.gameState !== 'playing') return;
+        
+        // Create falling object with shared ID
+        const obj = new FallingObject(objData.x, objData.y, objData.type);
+        obj.sharedId = objId;
+        obj.isShared = true;
+        
+        // Add to game's falling objects
+        this.gameInstance.fallingObjects.push(obj);
+        this.sharedObjects[objId] = obj;
+    }
+    
+    removeSharedObject(objId) {
+        if (this.sharedObjects[objId]) {
+            // Remove from game's falling objects array
+            const index = this.gameInstance.fallingObjects.indexOf(this.sharedObjects[objId]);
+            if (index > -1) {
+                this.gameInstance.fallingObjects.splice(index, 1);
+            }
+            delete this.sharedObjects[objId];
         }
+    }
+    
+    broadcastSharedObject(objectData) {
+        if (!this.isHost || !this.roomRef) return;
+        
+        const objId = 'obj_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        
+        this.roomRef.child('sharedObjects').child(objId).set({
+            ...objectData,
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+            caughtBy: null
+        });
+        
+        return objId;
+    }
+    
+    markObjectAsCaught(objId, playerId) {
+        if (!this.roomRef || !objId) return;
+        
+        this.roomRef.child('sharedObjects').child(objId).update({
+            caughtBy: playerId,
+            caughtAt: firebase.database.ServerValue.TIMESTAMP
+        });
+        
+        // Remove object after short delay to allow sync
+        setTimeout(() => {
+            this.roomRef.child('sharedObjects').child(objId).remove();
+        }, 100);
     }
     
     startMultiplayerGame() {
         this.gameInstance.isMultiplayer = true;
         this.gameInstance.startGame();
         document.getElementById('multiplayer-menu').classList.add('hidden');
+        
+        // Start object synchronization if host
+        if (this.isHost) {
+            this.startObjectSync();
+        }
+    }
+    
+    startObjectSync() {
+        // Clear any existing timer
+        if (this.objectSyncTimer) {
+            clearInterval(this.objectSyncTimer);
+        }
+        
+        // Sync object spawning every few seconds
+        this.objectSyncTimer = setInterval(() => {
+            if (this.gameInstance.gameState === 'playing') {
+                this.spawnSyncedObjects();
+            }
+        }, 2000); // Spawn objects every 2 seconds
+    }
+    
+    spawnSyncedObjects() {
+        if (!this.isHost || !this.gameInstance) return;
+        
+        const types = ['note', 'star', 'diamond'];
+        const numObjects = Math.min(2 + Math.floor(this.gameInstance.level / 3), 4); // More objects at higher levels
+        
+        for (let i = 0; i < numObjects; i++) {
+            const type = types[Math.floor(Math.random() * types.length)];
+            const x = Math.random() * (this.gameInstance.width - 200) + 100;
+            
+            this.broadcastSharedObject({
+                x: x,
+                y: -50,
+                type: type
+            });
+        }
     }
     
     updatePlayerState(data) {
         if (!this.roomRef || !this.playerId) return;
         
+        // Add skin type to the data
+        if (this.gameInstance && this.gameInstance.skinManager) {
+            data.skinType = this.gameInstance.skinManager.currentSkin;
+        }
+        
         this.roomRef.child('players').child(this.playerId).update(data);
     }
     
-    broadcastFallingObject(objectData) {
+    updateGlobalGameState(data) {
         if (!this.isHost || !this.roomRef) return;
         
-        this.roomRef.child('fallingObjects').push({
-            ...objectData,
-            timestamp: firebase.database.ServerValue.TIMESTAMP
-        });
+        this.roomRef.child('gameSync').update(data);
     }
     
     startGame() {
@@ -363,6 +511,11 @@ class FirebaseMultiplayer {
                 gameState: 'playing',
                 startTime: firebase.database.ServerValue.TIMESTAMP
             });
+            
+            // Update active rooms
+            this.database.ref('activeRooms/' + this.currentRoom).update({
+                gameState: 'playing'
+            });
         });
     }
     
@@ -371,6 +524,12 @@ class FirebaseMultiplayer {
     }
     
     leaveRoom() {
+        // Clear object sync timer
+        if (this.objectSyncTimer) {
+            clearInterval(this.objectSyncTimer);
+            this.objectSyncTimer = null;
+        }
+        
         if (this.roomRef && this.playerId) {
             this.roomRef.child('players').child(this.playerId).remove();
             
@@ -396,6 +555,8 @@ class FirebaseMultiplayer {
         this.currentRoom = null;
         this.isHost = false;
         this.otherPlayers = {};
+        this.sharedObjects = {};
+        this.gameInstance.isMultiplayer = false;
     }
     
     generateRoomCode() {
@@ -426,6 +587,7 @@ class FirebaseMultiplayer {
                 <span class="player-status">
                     ${myData && myData.ready ? '<span class="ready-badge">READY</span>' : '<span class="not-ready-badge">NOT READY</span>'}
                 </span>
+                <span class="player-score">Score: ${myData ? myData.score || 0 : 0}</span>
             `;
             playersList.appendChild(currentPlayerDiv);
             
@@ -438,6 +600,7 @@ class FirebaseMultiplayer {
                     <span class="player-status">
                         ${player.ready ? '<span class="ready-badge">READY</span>' : '<span class="not-ready-badge">NOT READY</span>'}
                     </span>
+                    <span class="player-score">Score: ${player.score}</span>
                 `;
                 playersList.appendChild(playerDiv);
             });
@@ -492,10 +655,11 @@ class FirebaseMultiplayer {
                         <span class="rank">#${index + 1}</span>
                         <span class="name">${player.name}</span>
                         <span class="score">${player.score}</span>
+                        <span class="catches">${player.catches} catches</span>
                     </div>
                 `).join('')}
             </div>
-            <button class="neon-button" onclick="game.multiplayerManager.leaveRoom()">Leave Room</button>
+            <button class="neon-button" onclick="game.multiplayerManager.leaveRoom(); document.getElementById('game-over-screen').classList.add('hidden'); document.getElementById('start-screen').classList.remove('hidden');">Leave Room</button>
         `;
         
         document.getElementById('game-over-screen').appendChild(leaderboardDiv);
@@ -505,140 +669,10 @@ class FirebaseMultiplayer {
 // Enhanced Multiplayer UI Component
 class MultiplayerUI {
     static createMultiplayerMenu() {
-        const menuHTML = `
-            <div id="multiplayer-menu" class="screen hidden">
-                <h2 class="game-title">MULTIPLAYER</h2>
-                <p class="game-subtitle">Play with friends online!</p>
-                
-                <div class="player-name-section">
-                    <label>Your Name:</label>
-                    <input type="text" id="player-name-input" placeholder="Enter your name" maxlength="20" class="name-input">
-                    <button id="save-name-btn" class="neon-button small">Save</button>
-                </div>
-                
-                <div class="multiplayer-content">
-                    <div class="multiplayer-options">
-                        <div class="create-room-section">
-                            <button id="create-room-btn" class="neon-button">CREATE ROOM</button>
-                            <div id="room-code-display" class="hidden">
-                                <p>Room Code:</p>
-                                <h3 id="room-code" class="room-code"></h3>
-                                <button id="copy-code-btn" class="neon-button small">Copy Code</button>
-                            </div>
-                        </div>
-                        
-                        <div class="join-room-section">
-                            <input type="text" id="room-code-input" placeholder="Enter Room Code" maxlength="6" class="room-input">
-                            <button id="join-room-btn" class="neon-button">JOIN ROOM</button>
-                        </div>
-                        
-                        <div id="room-lobby" class="hidden">
-                            <h3>Players in Room</h3>
-                            <div id="players-list" class="players-list"></div>
-                            <div class="lobby-controls">
-                                <button id="ready-btn" class="neon-button">READY</button>
-                                <button id="start-game-btn" class="neon-button hidden">START GAME</button>
-                                <button id="leave-room-btn" class="neon-button">LEAVE ROOM</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="active-rooms-section">
-                        <h3>Active Rooms</h3>
-                        <div id="active-rooms-list" class="active-rooms-list">
-                            <p class="no-rooms">No active rooms</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <button id="back-from-multiplayer-btn" class="neon-button" style="margin-top: 30px;">BACK TO MENU</button>
-            </div>
-        `;
-        
-        // Add to game container
-        const gameContainer = document.getElementById('game-container');
-        gameContainer.insertAdjacentHTML('beforeend', menuHTML);
+        // Menu is already created in HTML
     }
     
     static addMultiplayerStyles() {
-        const styles = `
-            <style>
-                .player-name-section {
-                    margin: 20px 0;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 10px;
-                }
-                
-                .name-input {
-                    background: rgba(255, 255, 255, 0.1);
-                    border: 2px solid rgba(255, 255, 255, 0.3);
-                    color: #fff;
-                    padding: 10px;
-                    font-size: 18px;
-                    border-radius: 5px;
-                    width: 200px;
-                }
-                
-                .name-input:focus {
-                    outline: none;
-                    border-color: #00ffff;
-                    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-                }
-                
-                .multiplayer-content {
-                    display: flex;
-                    gap: 40px;
-                    justify-content: center;
-                    align-items: flex-start;
-                    margin-top: 30px;
-                }
-                
-                .multiplayer-options {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 30px;
-                    align-items: center;
-                }
-                
-                .active-rooms-section {
-                    background: rgba(0, 0, 0, 0.5);
-                    border: 2px solid rgba(255, 255, 255, 0.2);
-                    border-radius: 10px;
-                    padding: 20px;
-                    width: 300px;
-                    max-height: 400px;
-                    overflow-y: auto;
-                }
-                
-                .active-rooms-list {
-                    margin-top: 15px;
-                }
-                
-                .room-preview {
-                    background: rgba(255, 255, 255, 0.1);
-                    padding: 8px 12px;
-                    margin: 5px 0;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    transition: all 0.3s;
-                    font-size: 14px;
-                }
-                
-                .room-preview:hover {
-                    background: rgba(0, 255, 255, 0.2);
-                    transform: translateX(5px);
-                }
-                
-                .no-rooms {
-                    text-align: center;
-                    color: #666;
-                    font-style: italic;
-                }
-            </style>
-        `;
-        
-        document.head.insertAdjacentHTML('beforeend', styles);
+        // Styles are already in CSS files
     }
 }
